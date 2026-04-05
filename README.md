@@ -2,6 +2,8 @@
 
 A full-stack **Retrieval-Augmented Generation (RAG)** application that lets you upload documents, images, and videos, embed them into a vector database (Pinecone), and chat with your data using AI.
 
+🔗 **Live Demo:** [embedding-rag-j7ow.onrender.com](https://embedding-rag-j7ow.onrender.com)
+
 ## ✨ Features
 
 - **Multimodal Ingestion** — Upload PDFs, images (JPG/PNG/WebP), and videos (MP4/MOV/WebM) through the web UI or CLI

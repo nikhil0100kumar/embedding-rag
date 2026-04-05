@@ -1,0 +1,9 @@
+{
+  "appId": "com.andruia.multimodalrag",
+  "appName": "Multimodal RAG",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  }
+}

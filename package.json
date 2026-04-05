@@ -1,0 +1,21 @@
+{
+  "name": "embedding-rag-chat",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "start:local": "node --env-file=.env server.js",
+    "dev": "node --watch --env-file=.env server.js",
+    "ingest": "node --env-file=.env ingest.js",
+    "cap:copy": "npx cap copy",
+    "cap:sync": "npx cap sync android",
+    "cap:android": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.2.0",
+    "@capacitor/cli": "^8.2.0",
+    "@capacitor/core": "^8.2.0",
+    "busboy": "^1.6.0"
+  }
+}

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Multimodal RAG Mobile</title>
+  <link rel="stylesheet" href="/styles.css?v=20260320a" />
+</head>
+
+<body>
+  <div class="mobile-shell">
+    <header class="top-strip" style="display:none;"></header>
+
+    <section class="search-panel" style="display:none;">
+      <label class="search-box" for="globalSearch">
+        <input id="globalSearch" type="text" />
+      </label>
+    </section>
+
+    <main class="screen-stack">
+      <!-- Upload Screen (Screen 1) -->
+      <section id="uploadScreen" class="screen active" aria-label="Upload screen">
+        <div class="upload-container">
+          <div class="upload-card">
+            <label for="fileInput" class="upload-drop" id="uploadDropArea">
+              <div class="upload-icon-wrapper">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <div class="upload-text">Drag & drop file(s) to upload<br><span class="browse-link">or browse</span></div>
+            </label>
+          </div>
+
+          <div id="uploadStatus" class="status-panel"></div>
+
+          <div id="progressContainer" class="progress-container" style="display:none;">
+            <div class="progress-stats">
+              <span id="progressText">Processing files...</span>
+              <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="progressBar" class="progress-bar-fill"></div>
+            </div>
+          </div>
+
+          <div class="selection-container">
+            <div id="selectedFiles" class="selection-list">
+              <div class="empty-list">No files selected</div>
+            </div>
+
+            <div class="upload-actions">
+              <button id="goToChat" class="secondary-button">
+                Go to Chat
+              </button>
+              <button id="uploadTrigger" class="send-button-dark" style="display:none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                Upload & Ingest
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden required elements for app.js -->
+        <div style="display:none;">
+          <span id="totalCount">0</span>
+          <span id="videoCount">0</span>
+          <span id="imageCount">0</span>
+          <span id="textCount">0</span>
+          <span id="selectedCount">0</span>
+          <span class="helper-pill" id="librarySummary">0 assets</span>
+          <div id="assetList" class="asset-list"></div>
+        </div>
+      </section>
+
+      <!-- Chat Screen (Screen 2) -->
+      <section id="chatScreen" class="screen" aria-label="Chat screen">
+        <header class="chat-header">
+          <button class="back-button" type="button" id="backToUpload" data-screen="upload">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <h2 class="chat-title">Chat List</h2>
+          <div class="avatar-profile"><img src="https://i.pravatar.cc/150?img=47" alt="Profile"></div>
+        </header>
+
+        <div class="prompt-grid" style="display:none;">
+          <button class="prompt-chip" data-prompt="What files are indexed?" type="button"></button>
+          <button class="prompt-chip" data-prompt="Search for videos" type="button"></button>
+        </div>
+
+        <div id="messages" class="chat-thread"></div>
+
+        <div style="height: 100px;"></div> <!-- Spacer -->
+
+        <form id="composer" class="chat-composer-wrapper">
+          <div class="chat-composer-inner">
+            <textarea id="messageInput" rows="1" placeholder="Type your message..."></textarea>
+            <div class="composer-actions">
+              <button type="button" class="mic-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+              </button>
+              <button id="sendButton" class="send-button-gradient" type="submit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Hidden required elements -->
+          <select id="chatModality" style="display:none;">
+            <option value="all">Auto</option>
+          </select>
+          <input type="hidden" id="chatTopK" value="10" />
+        </form>
+      </section>
+    </main>
+
+    <input id="fileInput" type="file" multiple style="display:none;"
+      accept=".pdf,.txt,.md,.jpg,.jpeg,.png,.webp,.mp4,.mov,.webm,.m4v,.avi,.gif" />
+
+    <!-- Swipe Navigation Enabled (Pill Nav Removed) -->
+
+    <!-- Hidden required elements for app.js -->
+    <div style="display:none;">
+      <button id="importTrigger" type="button"></button>
+      <button id="refreshLibrary" type="button"></button>
+      <button id="switchToChat" type="button"></button>
+      <button id="statusToggle" type="button"></button>
+    </div>
+
+    <aside id="statusSheet" class="status-sheet hidden">
+      <div class="status-sheet-card">
+        <div class="section-head tight">
+          <h2>System Status</h2>
+          <button id="statusClose" class="sheet-close" type="button" aria-label="Close status panel">x</button>
+        </div>
+        <div id="statusCards" class="status-cards"></div>
+      </div>
+    </aside>
+  </div>
+
+  <template id="messageTemplate">
+    <article class="message-card">
+      <div class="message-meta" style="display:none;"></div>
+      <div class="message-avatar">
+        <img src="https://i.pravatar.cc/150?img=44" alt="avatar" />
+      </div>
+      <div class="message-content-wrapper">
+        <div class="message-body"></div>
+        <div class="sources"></div>
+      </div>
+    </article>
+  </template>
+
+  <script src="/runtime-config.js?v=20260320a"></script>
+  <script type="module" src="/app.js?v=20260320a"></script>
+</body>
+
+</html>

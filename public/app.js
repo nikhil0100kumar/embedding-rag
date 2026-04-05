@@ -41,7 +41,9 @@ const refs = {
   uploadStatus: document.querySelector("#uploadStatus"),
   uploadTrigger: document.querySelector("#uploadTrigger"),
   videoCount: document.querySelector("#videoCount"),
-  uploadDropArea: document.querySelector("#uploadDropArea")
+  uploadDropArea: document.querySelector("#uploadDropArea"),
+  uploadPasswordContainer: document.querySelector("#uploadPasswordContainer"),
+  uploadPassword: document.querySelector("#uploadPassword")
 };
 
 function endpoint(pathname) {
@@ -251,7 +253,11 @@ function updateCountLabels() {
 
 function updateUploadButton() {
   const count = state.selectedFiles.length;
-  refs.uploadTrigger.style.display = count > 0 ? "flex" : "none";
+  if (refs.uploadPasswordContainer) {
+    refs.uploadPasswordContainer.style.display = count > 0 ? "flex" : "none";
+  } else {
+    refs.uploadTrigger.style.display = count > 0 ? "flex" : "none";
+  }
   refs.uploadTrigger.innerHTML = `
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
       stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
@@ -449,8 +455,14 @@ async function uploadSelectedFiles() {
   setUploadStatus("Ingesting Multimodal Files", `Uploading and embedding files into Pinecone...`, "info");
 
   try {
+    const headers = {};
+    if (refs.uploadPassword && refs.uploadPassword.value) {
+      headers["X-Upload-Password"] = refs.uploadPassword.value;
+    }
+
     const response = await fetch(endpoint("/api/upload"), {
       method: "POST",
+      headers,
       body: formData
     });
 

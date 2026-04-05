@@ -562,6 +562,15 @@ async function handleAssets(request, response) {
 async function handleUpload(request, response) {
   try {
     console.log(`[Server] Received upload request: ${request.headers["content-type"]}`);
+
+    const UPLOAD_PASSWORD = process.env.UPLOAD_PASSWORD || "Kumar@9581341643";
+    const reqPassword = request.headers["x-upload-password"];
+
+    if (UPLOAD_PASSWORD && reqPassword !== UPLOAD_PASSWORD) {
+      console.warn("[Server] Unauthorized upload attempt. Invalid password.");
+      return json(request, response, 401, { error: "Unauthorized: Invalid upload password." });
+    }
+
     const filePaths = await parseMultipartUploads(request);
 
     if (filePaths.length === 0) {

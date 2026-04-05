@@ -200,6 +200,7 @@ In the **"Environment"** section, click **"Add Environment Variable"** for each:
 | `GROQ_BASE_URL` | `https://api.groq.com/openai/v1` |
 | `PORT` | `3000` |
 | `CORS_ALLOW_ORIGIN` | `*` |
+| `UPLOAD_PASSWORD` | Set your admin password for uploads (default: `Kumar@9581341643`) |
 
 #### 6. Deploy
 
@@ -219,12 +220,13 @@ Visit your Render URL and check:
 
 - **Spin down:** Free instances spin down after 15 minutes of inactivity. First request after sleep takes ~30 seconds.
 - **Memory:** 512 MB RAM limit. Large video uploads may fail.
-- **Storage:** Ephemeral disk — uploaded files in `data/` are lost on redeploy. Use the upload UI to re-ingest after each deploy.
+- **Storage:** Ephemeral disk — uploaded files in `data/` are lost on redeploy. Use the admin password to quickly re-ingest after each deploy.
 - **Build minutes:** 750 free build minutes per month.
 
 ### Tips
 
 - Set `PINECONE_INDEX_HOST` explicitly to avoid the auto-discovery API call on cold starts
+- **Security:** Since your UI is public, `UPLOAD_PASSWORD` protects your Pinecone database from being flooded with stranger's files.
 - For production, upgrade to a paid Render instance for persistent disk and no spin-down
 
 ## 📄 License
